@@ -1,20 +1,15 @@
-import express from "express";
-import bodyParser from "body-parser";
-const dotenv = require('dotenv');
-const mongoose = require('mongoose');
-
-
-
-
+const express = require('express');
+const { errorHandler } = require('./middleware/errorMiddleware');
+const PORT = process.env.PORT || 5000;
 
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
-app.use(bodyParser.json());
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
+app.use('/api/contractors', require('./routes/contractorRoutes'));
 
-
-app.get('/', (req, res) => { res.send('Hello World'); });
+app.use(errorHandler)
 
 app.listen(PORT, () => {console.log('Server is running on port ' + PORT)});
