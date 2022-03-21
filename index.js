@@ -16,7 +16,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use('/api/contractors', require('./routes/contractorRoutes'));
-app.use('/api/users', require('./routes/userRoutes'));
+app.use('/api/entrepreneurs', require('./routes/entrepreneurRoutes'));
 app.use('/api/investors' , require('./routes/investorRoutes'))
 app.use('/api/investement' , require('./routes/investementRoutes')) 
 
