@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 
 const companySchema = new mongoose.Schema({
-    user: {
+    entrepreneur: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
+        ref: 'Entrepreneur',
         required: true
     },
     company: {

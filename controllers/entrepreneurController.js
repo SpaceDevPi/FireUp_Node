@@ -67,7 +67,7 @@ const loginEntrepreneur = asyncHandler(async (req, res) => {
     res.json({
       _id: entrepreneur.id,
       username: entrepreneur.username,
-      email: entrepreneur.email,
+      validation: entrepreneur.valid,
       token: generateToken(entrepreneur._id),
     })
   } else {
@@ -76,11 +76,11 @@ const loginEntrepreneur = asyncHandler(async (req, res) => {
   }
 })
 
-// @desc    Get user data
+// @desc    Get Entrepreneur data
 // @route   GET /api/entrepreneur/me
 // @access  Private
 const getMe = asyncHandler(async (req, res) => {
-  res.status(200).json(req.user)
+  res.status(200).json(req.entrepreneur)
 })
 
 // Generate JWT
@@ -90,8 +90,98 @@ const generateToken = (id) => {
   })
 }
 
+//@desc  Update entrepreneur data
+//@route PUT /api/entrepreneurs/:id
+//@access Private
+const updateEntrepreneur = asyncHandler(async (req, res) => {
+  const entrepreneur = await Entrepreneur.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true,
+  })
+
+  if (!entrepreneur) {
+    res.status(400)
+    throw new Error('Invalid entrepreneur data')
+  }
+
+  res.status(200).json(entrepreneur)
+})
+
+//@desc  Delete entrepreneur
+//@route DELETE /api/entrepreneurs/:id
+//@access Private
+const deleteEntrepreneur = asyncHandler(async (req, res) => {
+  await Entrepreneur.findByIdAndDelete(req.params.id)
+
+  res.status(200).json({
+    message: 'entrepreneur deleted',
+  })
+})
+
+//@desc  Get all entrepreneurs
+//@route GET /api/entrepreneurs
+//@access Private
+const getAllEntrepreneurs = asyncHandler(async (req, res) => {
+  const entrepreneurs = await Entrepreneur.find()
+
+  res.status(200).json(entrepreneurs)
+})
+
+//@desc Update entrepreneur password
+//@route PUT /api/entrepreneurs/security/:id
+//@access Private
+const updateEntrepreneurPassword = asyncHandler(async (req, res) => {
+  const { password } = req.body
+
+  if (!password) {
+    res.status(400)
+    throw new Error('Please add all fields')
+  }
+
+  // Hash password
+  const salt = await bcrypt.genSalt(10)
+  const hashedPassword = await bcrypt.hash(password, salt)
+
+  // Update password
+
+  const entrepreneur = await Entrepreneur.findByIdAndUpdate(req.params.id, {
+    password: hashedPassword,
+  })
+
+  if (!entrepreneur) {
+    res.status(400)
+    throw new Error('Invalid entrepreneur data')
+  }
+
+  res.status(200).json(entrepreneur)
+})
+
+//@desc update entrepreneur validation
+//@route PUT /api/entrepreneurs/validate/:id
+//@access Private
+const updateEntrepreneurValidation = asyncHandler(async (req, res) => {
+  const entrepreneur = await Entrepreneur.findByIdAndUpdate(req.params.id, {
+    valid : true,
+  })
+
+  if (!entrepreneur) {
+    res.status(400)
+    throw new Error('Invalid entrepreneur data')
+  }
+
+  res.status(200).json(entrepreneur)
+})
+
+
+
+
 module.exports = {
   registerEntrepreneur,
   loginEntrepreneur,
   getMe,
+  updateEntrepreneur,
+  deleteEntrepreneur,
+  getAllEntrepreneurs,
+  updateEntrepreneurPassword,
+  updateEntrepreneurValidation
 }
