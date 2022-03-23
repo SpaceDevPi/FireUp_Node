@@ -2,6 +2,9 @@ const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
 const asyncHandler = require('express-async-handler')
 const Entrepreneur = require('../model/entrepreneurModel')
+const sendEmail = require('../utils/mail');
+const Token = require('../model/token');
+const crypto = import("crypto");
 
 // @desc    Register new entrepreneur
 // @route   POST /api/entrepreneurs
@@ -40,7 +43,20 @@ const registerEntrepreneur = asyncHandler(async (req, res) => {
     zip
   })
 
+
   if (entrepreneur) {
+    // Generate token
+    let token = await new Token({
+      entrepreneurId: entrepreneur._id,
+      token: crypto.randomBytes(32).toString('hex')
+    }).save()
+  
+    const message = `${process.env.BASE_URL}/entrepreneurs/verify/${entrepreneur._id}/${token.token}`
+  
+    await sendEmail(entrepreneur.email, 'Verify your email', message)
+  
+    res.send("An Email sent to your account please verify");
+
     res.status(201).json({
       _id: entrepreneur.id,
       username: entrepreneur.username,
@@ -53,6 +69,29 @@ const registerEntrepreneur = asyncHandler(async (req, res) => {
   }
 })
 
+// @desc    Verify email
+// @route   GET /api/entrepreneurs/verify/:id/:token
+// @access  Private
+const verifyEmail = asyncHandler(async (req, res) => {
+  const entrepreneur = await Entrepreneur.findById(req.params.id)
+  if (!entrepreneur) {
+    res.status(400).send('Invalid link')
+  }
+  const token = await Token.findOne({
+    entrepreneurId: entrepreneur._id,
+    token: req.params.token
+  })
+  if (!token) {
+    res.status(400).send('Invalid link')
+  }
+
+  await Entrepreneur.updateOne({ _id: entrepreneur._id }, { valid: true })
+  await Token.deleteOne({ _id: token._id })
+
+  res.send('Email verified successfully')
+
+})
+
 // @desc    Authenticate a entrepreneur
 // @route   POST /api/entrepreneurs/login
 // @access  Public
@@ -62,17 +101,21 @@ const loginEntrepreneur = asyncHandler(async (req, res) => {
   // Check for entrepreneur email
   const entrepreneur = await Entrepreneur.findOne({ email })
 
-  if (entrepreneur && (await bcrypt.compare(password, entrepreneur.password))) {
+  if (entrepreneur.valid == true && (await bcrypt.compare(password, entrepreneur.password))) {
       console.log('entrepreneur', entrepreneur)
     res.json({
       _id: entrepreneur.id,
-      username: entrepreneur.username,
       validation: entrepreneur.valid,
       token: generateToken(entrepreneur._id),
     })
   } else {
-    res.status(400)
-    throw new Error('Invalid credentials')
+    if (entrepreneur.valid == false) {
+      res.status(400)
+      throw new Error('entrepreneur not validated')
+    } else {
+      res.status(400)
+      throw new Error('Invalid credentials')
+    }
   }
 })
 
@@ -183,5 +226,6 @@ module.exports = {
   deleteEntrepreneur,
   getAllEntrepreneurs,
   updateEntrepreneurPassword,
-  updateEntrepreneurValidation
+  updateEntrepreneurValidation,
+  verifyEmail,
 }

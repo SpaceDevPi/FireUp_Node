@@ -1,6 +1,16 @@
 const express = require("express");
 const router = express.Router();
-const { registerEntrepreneur, loginEntrepreneur, getMe, updateEntrepreneur, deleteEntrepreneur, getAllEntrepreneurs, updateEntrepreneurPassword, updateEntrepreneurValidation} = require("../controllers/entrepreneurController");
+const { 
+    registerEntrepreneur, 
+    loginEntrepreneur, 
+    getMe, 
+    updateEntrepreneur, 
+    deleteEntrepreneur, 
+    getAllEntrepreneurs, 
+    updateEntrepreneurPassword, 
+    updateEntrepreneurValidation,
+    verifyEmail
+} = require("../controllers/entrepreneurController");
 const { protect } = require("../middleware/authMiddleware");
 
 router.post("/", registerEntrepreneur);
@@ -11,7 +21,7 @@ router.put("/:id", updateEntrepreneur);
 router.delete("/:id", deleteEntrepreneur);
 router.put("/security/:id", updateEntrepreneurPassword);
 router.put("/validate/:id", updateEntrepreneurValidation);
-
+router.get("/verify/:id/:token", verifyEmail);
 
 
 module.exports = router;
