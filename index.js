@@ -19,6 +19,9 @@ app.use('/api/contractors', require('./routes/contractorRoutes'));
 app.use('/api/entrepreneurs', require('./routes/entrepreneurRoutes'));
 app.use('/api/investors' , require('./routes/investorRoutes'))
 app.use('/api/investement' , require('./routes/investementRoutes')) 
+app.use('/api/project' , require('./routes/projectRoutes'))
+app.use('/api/post' , require('./routes/postRoutes'))
+app.use('/api/comments' , require('./routes/commentsRoutes'))
 
 app.use(errorHandler)
 
