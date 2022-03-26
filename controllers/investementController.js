@@ -4,10 +4,10 @@ const nodemailer = require("nodemailer");
 const {google} = require ('googleapis')
 const pdfDocument = require('pdfkit')
 const fs = require('fs')
+//const path = require('path');
+//const multer = require('multer');
+
 const doc = new pdfDocument()
-
-
-
 const Investement = require('../model/InvestementModel')
 const Investor= require('../model/investorModel');
 const SendmailTransport = require('nodemailer/lib/sendmail-transport');
@@ -41,10 +41,12 @@ const SetInvestement = asyncHandler( async (req , res) => {
     
 
     const investement = await Investement.create(req.body)
-    const investor = await Investor.findById(req.params.idInvestisseur)
-
+    //const investor = await Investor.findById(req.params.idInvestisseur)
     const mail =`
-    <h2 style="color:#f26716;"> Hello thanks for your Investment in our plateform <b>FireUp</b></h2>
+    <div style="max-width: 700px; margin:auto; border: 10px solid #ddd; padding: 50px 20px; font-size: 110%;">
+
+    <img src="../files/logo.png" />
+    <h2  style="text-align: center; text-transform: uppercase;color: #f26716;"> Hello thanks for your Investment in our plateform <b>FireUp</b></h2>
     <h3>this the details of your investment</h3>
     <h4>You have a new investement in the project : ${investement.idProject}</h4>
     <h4>Methode d'investissement : ${investement.MethodeInvestissement} </h4>
@@ -52,11 +54,14 @@ const SetInvestement = asyncHandler( async (req , res) => {
     <h4>Date d'investissement : ${investement.dateInvestissement}</h4>
     <h4>Date de fin d'investissement : ${investement.dateFin} </h4>
     <h4>Montant total d'investissement : ${investement.monatantTotal} </h4>
+    </div>
 
     `
     const pdf =`
-     Hello thanks for your Investment in our plateform FireUp
-    this the details of your investment
+
+   Hello thanks for your Investment in our plateformFireUp
+
+                    this the details of your investment:
     You have a new investement in the project : ${investement.idProject}
     Methode d'investissement : ${investement.MethodeInvestissement} 
     Montant : ${investement.montantInvesti}
@@ -66,7 +71,7 @@ const SetInvestement = asyncHandler( async (req , res) => {
 
     `
       // create reusable transporter object using the default SMTP transport
-      const accessToken = 'ya29.A0ARrdaM_gN5YEBS09452fWOsLDNUB6V8Zb9N64e6NvapoFXr5ADDNV9MJFRKaP8XkolEWbHKsTgJhhu9n4N457oh2l7KQ65SZwrcoLWijdzbMw0X2vEq9sEJ2ux--0yIARHuL8ifcOwMwUoY8HT-DU6gTuMFdBA'
+      const accessToken = 'ya29.A0ARrdaM90_EmtxaNp846uj2M73HqMxGMwMByN4TJP5wLWJfkT10is6gi1buy5L7g-VuW6miJrQK8qPM_H-yUrVguDGOhPk8uDP70OFOyj0uPpBuGh6Lnq-V3LOBaleM1qPiHs0YG8PEQY8dkbYfCLfC0UZCzEyw'
   let transporter = await nodemailer.createTransport({
     service : 'gmail', 
     auth: {
@@ -98,11 +103,17 @@ const SetInvestement = asyncHandler( async (req , res) => {
   console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
  
 
-  doc.pipe(fs.createWriteStream(`${investement.idInvestisseur}.pdf`));
+  doc.pipe(fs.createWriteStream(`./files/${investement.idInvestisseur}.pdf`));
+
+  doc.image('./files/logo.png', {
+    fit: [100, 50],
+    align: 'start',
+    valign: 'start'
+  });
 
   doc
-  .fontSize(25)
-  .text(pdf, 100, 100);
+  .fontSize(12)
+  .text(pdf,  100, 100 );
   doc.end();
 
 

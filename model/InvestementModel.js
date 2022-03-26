@@ -28,7 +28,6 @@ const InvestementSchema = mongoose.Schema({
     },
     dateInvestissement: {
         type : Date, 
-        
         default : date
     },
     dateFin:{

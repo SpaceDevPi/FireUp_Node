@@ -23,6 +23,7 @@ app.use('/api/project' , require('./routes/projectRoutes'))
 app.use('/api/post' , require('./routes/postRoutes'))
 app.use('/api/comments' , require('./routes/commentsRoutes'))
 
+
 app.use(errorHandler)
 
 app.listen(PORT, () => {console.log('Server is running on port ' + PORT)});
