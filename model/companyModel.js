@@ -1,12 +1,8 @@
 const mongoose = require('mongoose');
 
-const companySchema = new mongoose.Schema({
-    entrepreneur: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Entrepreneur',
-        required: true
-    },
-    company: {
+
+const companySchema = mongoose.Schema({
+    name: {
         type: String,
         required: true
     },
@@ -36,11 +32,11 @@ const companySchema = new mongoose.Schema({
     },
     companyWebsite: {
         type: String,
-        required: true
+        required: false
     },
     companyDescription: {
         type: String,
-        required: true
+        required: false
     },
     companyLogo: {
         type: String,
@@ -61,8 +57,17 @@ const companySchema = new mongoose.Schema({
     companyDomain: {
         type: String,
         required: false
+    },
+    entrepreneur: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Entrepreneur',
+        required: true
     }
+},
+{
+    timestamps: true
 });
 
-exports.Company = mongoose.model('Company', companySchema);
+
+module.exports = mongoose.model('Company', companySchema);
 

@@ -9,7 +9,8 @@ const {
     getAllEntrepreneurs, 
     updateEntrepreneurPassword, 
     updateEntrepreneurValidation,
-    verifyEmail
+    verifyEmail,
+    getEntrepreneurById,
 } = require("../controllers/entrepreneurController");
 const { protect } = require("../middleware/authMiddleware");
 
@@ -22,6 +23,7 @@ router.delete("/:id", deleteEntrepreneur);
 router.put("/security/:id", updateEntrepreneurPassword);
 router.put("/validate/:id", updateEntrepreneurValidation);
 router.get("/verify/:id/:token", verifyEmail);
+router.get("/:id", getEntrepreneurById);
 
 
 module.exports = router;
