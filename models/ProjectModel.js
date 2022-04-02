@@ -77,7 +77,13 @@ const ProjectSchema = mongoose.Schema({
         type: String,
         required: [true, "Please enter email  !"]
         
-    }
+    }, 
+
+    
+    montantRestant: {
+        type : Number, 
+        default : -1, 
+    },
 
 
 

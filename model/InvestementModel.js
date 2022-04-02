@@ -12,7 +12,6 @@ const InvestementSchema = mongoose.Schema({
     idInvestisseur: {
         type : String, 
         required : true, 
-        unique : true
 
      },
     monatantTotal: {
@@ -26,6 +25,7 @@ const InvestementSchema = mongoose.Schema({
         required : true, 
 
     },
+   
     dateInvestissement: {
         type : Date, 
         default : date
@@ -39,7 +39,8 @@ const InvestementSchema = mongoose.Schema({
         type : String, 
         required: true
 
-    }
+    }, 
+   
 
 
 

@@ -86,6 +86,11 @@ const investorSchema = mongoose.Schema({
         default: "https://res.cloudinary.com/devatchannel/image/upload/v1602752402/avatar/avatar_cugq40.png"
         
      },
+     valid : {
+
+        type : Boolean, 
+        default : false
+    }
     //   image_mimetype: {
     //     type: String,
         
