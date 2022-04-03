@@ -102,6 +102,7 @@ const DeleteComments = asyncHandler(async (req , res) => {
       res.status(400)
       throw new Error('comments not found')
     }
+    await Comments.deleteMany({parentId:req.params.id})
 
     await comments.remove()
     res.status(200).json({id : req.params.id})
