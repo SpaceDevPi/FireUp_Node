@@ -23,6 +23,8 @@ app.use('/api/project' , require('./routes/projectRoutes'))
 app.use('/api/post' , require('./routes/postRoutes'))
 app.use('/api/comments' , require('./routes/commentsRoutes'))
 app.use('/uploads', express.static("uploads"));
+app.use("/api/events", require("./routes/eventsRoutes"));
+app.use("/api/bookings", require("./routes/bookingRoutes"));
 
 
 app.use(errorHandler)
