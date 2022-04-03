@@ -1,13 +1,33 @@
 const asyncHandler = require('express-async-handler')
 const Project= require('../models/ProjectModel')
+const nodemailer = require("nodemailer");
+const SendmailTransport = require('nodemailer/lib/sendmail-transport');
+
+
+
+const getProjectsToApprove = asyncHandler(async (req , res) => {
+  const projectsss = await Project.find({approved:"en attente"})
+
+  console.log(projectsss)
+  res.status(200).json(projectsss)
+})
 
 // get Project 
-const getProjects = asyncHandler(async (req , res) => {
-    const projects = await Project.find()
+const getApprovedProjects = asyncHandler(async (req , res) => {
+    const projects = await Project.find({approved:"valide"})
  
     console.log(projects)
     res.status(200).json(projects)
 })
+
+const getRefusedProjects = asyncHandler(async (req , res) => {
+  const projects = await Project.find({approved:"refuse"})
+
+  console.log(projects)
+  res.status(200).json(projects)
+})
+
+
 //create Project
 const SetProject = asyncHandler( async (req , res) => {
     if (!req.body.title) {
@@ -38,7 +58,8 @@ const SetProject = asyncHandler( async (req , res) => {
         category: req.body.category,
         price_per_share: req.body.price_per_share,
         place : req.body.place,
-        email : req.body.email
+        email : req.body.email,
+        appproved : false,
 
     })
     if(!project)
@@ -69,14 +90,149 @@ const UpdateProject = asyncHandler(async (req , res) => {
     res.status(200).json(updatedProject)
 })
 
+
+
+const ApproveProject = asyncHandler(async (req , res) => {
+
+  const project = await Project.findById(req.params.id)
+
+if (!project) {
+  res.status(400)
+  throw new Error('Project not found')
+}
+const updatedProject = await Project.findByIdAndUpdate(req.params.id, req.body, {
+  new: true,
+})
+
+
+var raison_refus ="" 
+if (req.body.approved == "refuse")
+raison_refus=req.body.approvement_comment;
+
+
+var title_project =project.title;
+
+var mail_refus = `Hello dear user, thank you for trusting us. <br><br>However, we inform you that your project <a style="color:#FFA73B;">${title_project} </a> has not been approved by our teams.<br> <br> Here are the reasons for the refusal: <a style="color:#870000; " >${raison_refus} </a>.<br><br>Don’t worry you just need to update your project following our tips .`
+var acceptation = `Hello dear user, thank you for trusting us. <br><br>We inform you that your project <a style="color:#FFA73B;">${title_project} </a> has been approved successfully by our teams.<br><br> Your project is officially visible on the platform and you can now receive investments .<br><br>Congratulations .`
+
+
+
+var resultat =""
+if (req.body.approved == "refuse")
+resultat =mail_refus
+else resultat = acceptation
+//email 
+
+const mail =`
+<div style="display: none; font-size: 1px; color: #fefefe; line-height: 1px; font-family: 'Lato', Helvetica, Arial, sans-serif; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden;"> We're thrilled to have you here! Get ready to dive into your new account. </div>
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <!-- LOGO -->
+    <tr>
+        <td bgcolor="#FFA73B" align="center">
+            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
+                <tr>
+                    <td align="center" valign="top" style="padding: 40px 10px 40px 10px;"> </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td bgcolor="#FFA73B" align="center" style="padding: 0px 10px 0px 10px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
+                <tr>
+                    <td bgcolor="#ffffff" align="center" valign="top" style="padding: 40px 20px 20px 20px; border-radius: 4px 4px 0px 0px; color: #111111; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 48px; font-weight: 400; letter-spacing: 4px; line-height: 48px;">
+                        <h1 style="font-size: 48px; font-weight: 400; margin: 2;">Welcome to <span style=" color :#FFA73B;">Fire up! </span></h1> <img src=" https://img.icons8.com/clouds/100/000000/handshake.png" width="125" height="120" style="display: block; border: 0px;" />
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td bgcolor="#f4f4f4" align="center" style="padding: 0px 10px 0px 10px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
+                <tr>
+                    <td bgcolor="#ffffff" align="left" style="padding: 20px 30px 40px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
+                        <p style="margin: 0;">  ${resultat}  </p>
+                    </td>
+                </tr>
+               
+                <tr>
+                  
+                </tr> <!-- COPY -->
+              
+
+
+
+
+                <tr>
+                    <td bgcolor="#ffffff" align="left" style="padding: 0px 30px 20px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
+                        <p style="margin: 0;">If you have any questions, just reply to this email—we're always happy to help out.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td bgcolor="#ffffff" align="left" style="padding: 0px 30px 40px 30px; border-radius: 0px 0px 4px 4px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
+                        <p style="margin: 0;">Cheers,<br>SpaceDev Team</p>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td bgcolor="#f4f4f4" align="center" style="padding: 30px 10px 0px 10px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
+                <tr>
+                    <td bgcolor="#FFECD1" align="center" style="padding: 30px 30px 30px 30px; border-radius: 4px 4px 4px 4px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
+                        <h2 style="font-size: 20px; font-weight: 400; color: #111111; margin: 0;">Need more help?</h2>
+                        <p style="margin: 0;"><a href="#" target="_blank" style="color: #FFA73B;">We&rsquo;re here to help you out</a></p>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td bgcolor="#f4f4f4" align="center" style="padding: 0px 10px 0px 10px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
+                <tr>
+                    <td bgcolor="#f4f4f4" align="left" style="padding: 0px 30px 30px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 400; line-height: 18px;"> <br>
+                        <p style="margin: 0;">If these emails get annoying, please feel free to <a href="#" target="_blank" style="color: #111111; font-weight: 700;">unsubscribe</a>.</p>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+ 
+  `;
+
+ // send email
+ let transporter = nodemailer.createTransport({
+  service : 'gmail', 
+  auth: {
+    user: process.env.USER, // generated ethereal user
+    pass : process.env.PASS, 
+    
+  },
+  tls:{
+    rejectUnauthorized : false 
+  }
+});
+
+      // send mail with defined transport object
+      let info = transporter.sendMail({
+        from: '"FireUp" <startup.plateform@gmail.com>', // sender address
+        to: project.email, // list of receivers
+        subject: "Project Approvement ", // Subject line
+        text: "Hello world?", // plain text body
+        html: mail, // html body
+      });
+
+
+  res.status(200).json(updatedProject)
+})
+
 //delete Project 
 const DeleteProject = asyncHandler(async (req , res) => {
-  
-
-
-
    const project = await Project.findById(req.params.id)
-
     if (!project) {
       res.status(400)
       throw new Error('project not found')
@@ -118,6 +274,24 @@ const findProjectByContractorId = asyncHandler ( async(req , res) => {
 
   
 })
+
+
+
+
+const setProjectApproved = asyncHandler(async (req , res) => {
+
+  const project = await Project.findById(req.params.id)
+
+if (!project) {
+  res.status(400)
+  throw new Error('Project not found')
+}
+const updatedProject = await Project.findByIdAndUpdate(req.params.id, req.body, {
+  new: true,
+})
+
+  res.status(200).json(updatedProject)
+})
 module.exports = {
-    getProjects, SetProject ,UpdateProject ,DeleteProject, findProjectById,findProjectByContractorId
+  getProjectsToApprove,ApproveProject,getApprovedProjects,getRefusedProjects, SetProject ,UpdateProject ,DeleteProject, findProjectById,findProjectByContractorId
 }

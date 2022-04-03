@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 const ProjectSchema = mongoose.Schema({
 
     
-      
+   
     title: {
         type: String,
         required: [true, "Please enter your first name!"],
@@ -41,8 +41,7 @@ const ProjectSchema = mongoose.Schema({
        
         type: String,
         default: "https://res.cloudinary.com/devatchannel/image/upload/v1602752402/avatar/avatar_cugq40.png"
-        
-       
+     
     },
     state: {
         type: String,
@@ -84,6 +83,14 @@ const ProjectSchema = mongoose.Schema({
         type : Number, 
         default : -1, 
     },
+    
+    approved: {
+        type: String,
+        default : "en attente"
+    },
+    approvement_comment: {
+        type: String,
+    }
 
 
 

@@ -1,11 +1,15 @@
 const express = require ('express')
-const { getProjects, findProjectById, SetProject, UpdateProject, DeleteProject ,findProjectByContractorId} = require('../controllers/projectController')
+const { getApprovedProjects, findProjectById,ApproveProject,getProjectsToApprove,getRefusedProjects, SetProject, UpdateProject, DeleteProject ,findProjectByContractorId} = require('../controllers/projectController')
 const router = express.Router()
 const multer = require('multer');
 
 
 
-router.get('/' , getProjects)
+router.get('/' , getApprovedProjects)
+
+router.get('/getProjectsToApprove' , getProjectsToApprove)
+
+router.get('/getRefusedProjects' , getRefusedProjects)
 
 router.get('/project/:id' ,findProjectById )
 
@@ -15,6 +19,7 @@ router.post('/newproject' , SetProject)
 
 router.put ('/updateproject/:id' , UpdateProject)
 
+router.put ('/ApproveProject/:id' , ApproveProject)
 
 router.delete('/deleteproject/:id' , DeleteProject)
 
