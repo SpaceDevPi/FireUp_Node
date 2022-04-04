@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 
 const companySchema = mongoose.Schema({
-    name: {
+    companyName: {
         type: String,
         required: true
     },
@@ -55,6 +55,10 @@ const companySchema = mongoose.Schema({
         required: false
     },
     companyDomain: {
+        type: String,
+        required: false
+    },
+    companySize: {
         type: String,
         required: false
     },
