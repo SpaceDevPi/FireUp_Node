@@ -12,12 +12,29 @@ const getProjectsToApprove = asyncHandler(async (req , res) => {
   res.status(200).json(projectsss)
 })
 
+
+
+const getProjectsToApproveBycontractorId = asyncHandler(async (req , res) => {
+  const projectsss = await Project.find({approved:"en attente",contractor_id:req.params.id})
+
+  console.log(projectsss)
+  res.status(200).json(projectsss)
+})
+
+
 // get Project 
 const getApprovedProjects = asyncHandler(async (req , res) => {
     const projects = await Project.find({approved:"valide"})
  
     console.log(projects)
     res.status(200).json(projects)
+})
+
+const getApprovedProjectsByContractorId = asyncHandler(async (req , res) => {
+  const projects = await Project.find({approved:"valide",contractor_id:req.params.id})
+
+  console.log(projects)
+  res.status(200).json(projects)
 })
 
 const getRefusedProjects = asyncHandler(async (req , res) => {
@@ -27,6 +44,13 @@ const getRefusedProjects = asyncHandler(async (req , res) => {
   res.status(200).json(projects)
 })
 
+
+const getRefusedProjectsByContractorId = asyncHandler(async (req , res) => {
+  const projects = await Project.find({approved:"refuse",contractor_id:req.params.id})
+
+  console.log(projects)
+  res.status(200).json(projects)
+})
 
 //create Project
 const SetProject = asyncHandler( async (req , res) => {
@@ -263,7 +287,7 @@ const findProjectById = asyncHandler ( async(req , res) => {
 
 const findProjectByContractorId = asyncHandler ( async(req , res) => {
 
-  const project = await Project.find({contractor_id: req.params.id_contractor} )
+  const project = await Project.find({contractor_id: req.params.id_contractor,approved:"valide"} )
 
   if (!project) {
     res.status(400)
@@ -293,5 +317,5 @@ const updatedProject = await Project.findByIdAndUpdate(req.params.id, req.body, 
   res.status(200).json(updatedProject)
 })
 module.exports = {
-  getProjectsToApprove,ApproveProject,getApprovedProjects,getRefusedProjects, SetProject ,UpdateProject ,DeleteProject, findProjectById,findProjectByContractorId
+  getProjectsToApprove,getProjectsToApproveBycontractorId,getApprovedProjectsByContractorId,getRefusedProjectsByContractorId,ApproveProject,getApprovedProjects,getRefusedProjects, SetProject ,UpdateProject ,DeleteProject, findProjectById,findProjectByContractorId
 }
