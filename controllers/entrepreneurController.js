@@ -21,12 +21,34 @@ const nanoid = require('nanoid');
 // @route   POST /api/entrepreneurs
 // @access  Public
 const registerEntrepreneur = asyncHandler(async (req, res) => {
-  const { username, email, password, firstname, lastname, phone, address, city, state, zip ,companyname} = req.body
+  const { 
+    email, 
+    password, 
+    firstname, 
+    lastname,
+    birthday,
+    villenaissance, 
+    phone, 
+    address, 
+    city, 
+    state, 
+    zip ,
+    companyName, 
+    companyAddress, 
+    companyZip, 
+    companyCity, 
+    companyPhone, 
+    companyEmail, 
+    companyWebsite,
+    companySector,
+    companySize,
+    companyService,
+  } = req.body
 
-  if (!username || !email || !password || !firstname || !lastname || !phone || !address || !city || !state || !zip  || !companyname) {
-    res.status(400)
-    throw new Error('Please add all fields')
-  }
+  // if (!email || !password || !firstname || !lastname || !birthday || !villenaissance || !phone || !address || !city || !state || !zip  || !companyName || !companyAdresse || !companyZip || !companyCity || !companyPhone || !companyEmail || !companyWebsite  || !companySize || !companyService) {
+  //   res.status(400)
+  //   throw new Error('Please add all fields')
+  // }
 
   // Check if entrepreneur exists
   const entrepreneurExists = await Entrepreneur.findOne({ email })
@@ -44,11 +66,12 @@ const registerEntrepreneur = asyncHandler(async (req, res) => {
   
   // Create entrepreneur
   const entrepreneur = new Entrepreneur({
-    username,
     email,
     password: hashedPassword,
     firstname,
     lastname,
+    birthday,
+    villenaissance,
     phone,
     address,
     city,
@@ -189,7 +212,17 @@ const registerEntrepreneur = asyncHandler(async (req, res) => {
       try{
         let company = new Company({
           entrepreneur: id,
-          name: companyname,
+          companyName: companyName,
+          companyEmail: companyEmail,
+          companyPhone: companyPhone,
+          companyAddress: companyAddress,
+          companyCity: companyCity,
+          companyZip: companyZip,
+          companyWebsite: companyWebsite,
+          companySector: companySector,
+          companyService: companyService,
+          companySize: companySize,
+
         }).save().then(() => {
           console.log("company has been created")
         })
