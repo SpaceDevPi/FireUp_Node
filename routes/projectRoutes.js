@@ -1,5 +1,5 @@
 const express = require ('express')
-const {getProjectsToApproveBycontractorId,getApprovedProjectsByContractorId,getRefusedProjectsByContractorId, getApprovedProjects, findProjectById,ApproveProject,getProjectsToApprove,getRefusedProjects, SetProject, UpdateProject, DeleteProject ,findProjectByContractorId} = require('../controllers/projectController')
+const {getApprovedProjectsByCategorie,getProjectsToApproveBycontractorId,getApprovedProjectsByContractorId,getRefusedProjectsByContractorId, getApprovedProjects, findProjectById,ApproveProject,getProjectsToApprove,getRefusedProjects, SetProject, UpdateProject, DeleteProject ,findProjectByContractorId} = require('../controllers/projectController')
 const router = express.Router()
 const multer = require('multer');
 
@@ -11,6 +11,8 @@ router.get('/getApprovedProjectsByContractorId/:id' , getApprovedProjectsByContr
 router.get('/getRefusedProjectsByContractorId/:id' , getRefusedProjectsByContractorId)
 
 router.get('/' , getApprovedProjects)
+router.get('/:category' , getApprovedProjectsByCategorie)
+
 
 router.get('/getProjectsToApprove' , getProjectsToApprove)
 
