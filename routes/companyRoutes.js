@@ -7,7 +7,4 @@ router.route('/').get(getCompanies).post(setCompanies);
 router.route('/:id').put(updateCompanies).delete(deleteCompanies);
 router.route('/entrepreneur/:id').get(getCompanyByEntrepreneur);
 router.route('/:id').get(getCompanyById);
-
-
-
 module.exports = router;

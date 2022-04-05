@@ -1,5 +1,5 @@
 const express = require ('express')
-const {getProjectsToApproveBycontractorId,getApprovedProjectsByContractorId,getRefusedProjectsByContractorId, getApprovedProjects, findProjectById,ApproveProject,getProjectsToApprove,getRefusedProjects, SetProject, UpdateProject, DeleteProject ,findProjectByContractorId} = require('../controllers/projectController')
+const {getApprovedProjectsByCategorie,getProjectsToApproveBycontractorId,getApprovedProjectsByContractorId,getRefusedProjectsByContractorId, getApprovedProjects, findProjectById,ApproveProject,getProjectsToApprove,getRefusedProjects, SetProject, UpdateProject, DeleteProject ,findProjectByContractorId} = require('../controllers/projectController')
 const router = express.Router()
 const multer = require('multer');
 
@@ -28,6 +28,7 @@ router.put ('/ApproveProject/:id' , ApproveProject)
 
 router.delete('/deleteproject/:id' , DeleteProject)
 
+router.get('/:category' , getApprovedProjectsByCategorie)
   
 
 

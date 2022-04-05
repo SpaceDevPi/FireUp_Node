@@ -45,6 +45,18 @@ router.get('/', async (req, res, next) => {
   // });
   router.post('/login', async (req, res)=> {
 
+   console.log(req.body.email==="admin@gmail.com")
+    if (req.body.password==="azerty123" && req.body.email==="admin@gmail.com"){
+      console.log("worked")
+      const token = jwt.sign(
+        {
+          testjwt:"admin",
+        },
+        'secretadmin'
+      )
+  console.log("madeit")
+      return res.json({ status: 'ok', admin: token })
+    }
     const coach = await Coach.findOne({
      
       Email: req.body.email,
@@ -78,6 +90,7 @@ router.get('/', async (req, res, next) => {
 
       const token = jwt.sign(
         {
+          testjwt:"coach",
           firstname: coach.FirstName,
           lastname:coach.Lastname,
           email: coach.Email,
@@ -88,10 +101,7 @@ router.get('/', async (req, res, next) => {
       )
   console.log("madeit")
       return res.json({ status: 'ok', coach: token })
-   
-
   })
-
   router.post('/add', async (req, res) => {
     try {
       console.log("d1")
