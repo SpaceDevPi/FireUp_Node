@@ -4,9 +4,17 @@ var router = express.Router();
 var Offerticket = require('../models/offerticket')
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs')
+var sid ="AC7c74f112a40f61397839db1c3d2fc72b";
+var auth_token = "2520b5d46dce335023e95ce194eb4793"
+ var twilio = require('twilio')(process.env.sid,process.env.auth_token)
+// var twilio = require('twilio')(sid,auth_token)
 
 router.get('/', function (req, res, next) {
- 
+  // twilio.messages.create({
+  //   from :"+12344071581",
+  //   to:"+21626868706",
+  //   body:"Offer reservation done successfully!"
+  // }).then((res)=>console.log('worked')).catch((err)=>{console.log(err);});
   var dateTime = new Date();
   const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 
@@ -18,20 +26,25 @@ router.get('/', function (req, res, next) {
   
   
   router.post('/add', async (req, res) => {
-    
+    twilio.messages.create({
+      from :"+12344071581",
+      to:"+21626868706",
+      body:"Offer reservation done successfully! The meeting is scheduled with coach : "+req.body.coachfullname+ " for "+req.body.dateoffer+" , "+req.body.timeoffer+" in room number :"+req.body.numroom
+    }).then((res)=>console.log('worked')).catch((err)=>{console.log(err);});
     try {
       await Offerticket.create({
         idcoach:req.body.idcoach,
         idoffer:req.body.idoffer,
         idclient:req.body.idclient,
         numroom:req.body.numroom,
-        dateend:req.body.dateend,
-        datestart:req.body.datestart,
+        dateoffer:req.body.dateoffer,
+        timeoffer:req.body.timeoffer,
         image:req.body.image,
-        starttime:req.body.starttime,
-        endtime:req.body.endtime,
         coachfullname:req.body.coachfullname,
       })
+      console.log("1")
+  
+console.log("3")
       res.json({ status: 'ok' })
     } catch (err) {
       res.json({ status: 'error', error: 'Duplicate email' })
