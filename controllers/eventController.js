@@ -69,15 +69,16 @@ const UpdateEvent = asyncHandler(async (req, res) => {
 
 //delete event
 const DeleteEvent = asyncHandler(async (req, res) => {
+  console.log(req.params.id)
   const event = await Event.findById(req.params.id);
 
   if (!event) {
     res.status(400);
     throw new Error("event not found");
   }
-
-  await event.remove();
-  res.status(200).json({ id: req.params.id });
+else{await event.remove();
+  res.status(200).json({ id : req.params.id });}
+     
 });
 
 const findEventById = asyncHandler(async (req, res) => {

@@ -296,7 +296,12 @@ const findProjectByContractorId = asyncHandler ( async(req , res) => {
 })
 
 
+const getApprovedProjectsByCategorie = asyncHandler(async (req , res) => {
+  const projects = await Project.find({approved:"valide",category : req.params.category})
 
+  console.log(projects)
+  res.status(200).json(projects)
+})
 
 const setProjectApproved = asyncHandler(async (req , res) => {
 
@@ -313,5 +318,5 @@ const updatedProject = await Project.findByIdAndUpdate(req.params.id, req.body, 
   res.status(200).json(updatedProject)
 })
 module.exports = {
-  getProjectsToApprove,getProjectsToApproveBycontractorId,getApprovedProjectsByContractorId,getRefusedProjectsByContractorId,ApproveProject,getApprovedProjects,getRefusedProjects, SetProject ,UpdateProject ,DeleteProject, findProjectById,findProjectByContractorId
+  getApprovedProjectsByCategorie, getProjectsToApprove,getProjectsToApproveBycontractorId,getApprovedProjectsByContractorId,getRefusedProjectsByContractorId,ApproveProject,getApprovedProjects,getRefusedProjects, SetProject ,UpdateProject ,DeleteProject, findProjectById,findProjectByContractorId
 }

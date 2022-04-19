@@ -24,6 +24,4 @@ router.put("/security/:id", updateEntrepreneurPassword);
 router.put("/validate/:id", updateEntrepreneurValidation);
 router.get("/verify/:id/:token", verifyEmail);
 router.get("/:id", getEntrepreneurById);
-
-
 module.exports = router;
