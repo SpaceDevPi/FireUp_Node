@@ -42,6 +42,7 @@ const SetInvestement = asyncHandler( async (req , res) => {
         res.status(400)
         throw new Error('Erreur Montant')
       }
+      const investor = await Investor.findById(req.body.idInvestisseur)
 
 
     
@@ -59,9 +60,36 @@ const SetInvestement = asyncHandler( async (req , res) => {
     //console.log(project.montantRestant)
     //const investor = await Investor.findById(req.params.idInvestisseur)
     const mail =`
-    <div style="max-width: 700px; margin:auto; border: 10px solid #ddd; padding: 50px 20px; font-size: 110%;">
 
-    <img src="./files/img.png" />
+    <div style="display: none; font-size: 1px; color: #fefefe; line-height: 1px; font-family: 'Lato', Helvetica, Arial, sans-serif; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden;"> We're thrilled to have you here! Get ready to dive into your new account. </div>
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        <!-- LOGO -->
+        <tr>
+            <td bgcolor="#FFA73B" align="center">
+                <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
+                    <tr>
+                        <td align="center" valign="top" style="padding: 40px 10px 40px 10px;"> </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td bgcolor="#FFA73B" align="center" style="padding: 0px 10px 0px 10px;">
+                <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
+                    <tr>
+                        <td bgcolor="#ffffff" align="center" valign="top" style="padding: 40px 20px 20px 20px; border-radius: 4px 4px 0px 0px; color: #111111; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 48px; font-weight: 400; letter-spacing: 4px; line-height: 48px;">
+                            <h1 style="font-size: 48px; font-weight: 400; margin: 2;">Welcome to <span style=" color :#FFA73B;">Fire up! </span></h1> <img src=" https://img.icons8.com/clouds/100/000000/handshake.png" width="125" height="120" style="display: block; border: 0px;" />
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td bgcolor="#f4f4f4" align="center" style="padding: 0px 10px 0px 10px;">
+                <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
+                    <tr>
+                        <td bgcolor="#ffffff" align="left" style="padding: 20px 30px 40px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
+                        
     <h2  style="text-align: center; text-transform: uppercase;color: #f26716;"> Hello thanks for your Investment in our plateform <b>FireUp</b></h2>
     <h3>this the details of your investment</h3>
     <h4>You have a new investement in the project : ${investement.idProject}</h4>
@@ -70,7 +98,16 @@ const SetInvestement = asyncHandler( async (req , res) => {
     <h4>Date d'investissement : ${investement.dateInvestissement}</h4>
     <h4>Date de fin d'investissement : ${investement.dateFin} </h4>
     <h4>Montant total d'investissement : ${investement.monatantTotal} </h4>
-    </div>
+                        </td>
+                    </tr>
+                    <tr>
+                       
+                    </tr> <!-- COPY -->
+                                      
+                    </table>
+            </td>
+        </tr>
+    </table>   
 
     `
     const pdf =`
@@ -87,27 +124,26 @@ const SetInvestement = asyncHandler( async (req , res) => {
 
     `
       // create reusable transporter object using the default SMTP transport
-      const accessToken = 'ya29.A0ARrdaM_r_Fo36e24bvUl6kveVsL3bKreU_ZAbeyp3PbfokUA5KCHAo3DaGa1rCre_uqSmlwiEEP6mg5InXqmf6MBGuac80fNgqd7DSHr6ajza-44CDc1yAomGgEgbeABGrOuLesTelZgenFdJPuMceGjjIud'
   let transporter = await nodemailer.createTransport({
     service : 'gmail', 
     auth: {
       type: 'Oauth2',
-      user: 'startup.plateform@gmail.com', // generated ethereal user
+      user: process.env.USER, // generated ethereal user
       clientId : CLIENT_ID, 
       clientSecret : CLIENT_SECRET,
       regreshToken : REFRESH_TOKEN, 
-      accessToken : accessToken
+      accessToken : process.env.accessToken
     },
     tls:{
       rejectUnauthorized : false 
     }
   });
 
-
+console.log(investor)
   // send mail with defined transport object
   let info = await transporter.sendMail({
-    from: '"Daami adem" <startup.plateform@gmail.com>', // sender address
-    to: "daamiadem03@gmail.com", // list of receivers
+    from: '"FireUp" <startup.plateform@gmail.com>', // sender address
+    to: investor.email, // sender addresslist of receivers
     subject: "Investement", // Subject line
     text: "Hello world?", // plain text body
     html: mail, // html body
@@ -225,8 +261,17 @@ const getInvestmentsByInvestor = asyncHandler(async (req , res) => {
   res.status(200).json(projects)
 })
 
+const getMontantTotalInvesti= asyncHandler ( async (req , res) => {
+  const investements = await Investement.find(); 
+  var totalInvest; 
+  investements.forEach(investment => {
+    totalInvest = totalInvest +investment.montantInvesti; 
+  });
+  console.log(totalInvest)
+})
+
 
 
   module.exports = {
-    getInvestments, DeleteInvestment ,SetInvestement , UpdateInbestement ,getInvestmentsByInvestor,getInvestmentsByFormInvestement, findInvestementById,getInvestmentsByProject
+    getInvestments, DeleteInvestment ,getMontantTotalInvesti,SetInvestement , UpdateInbestement ,getInvestmentsByInvestor,getInvestmentsByFormInvestement, findInvestementById,getInvestmentsByProject
   }

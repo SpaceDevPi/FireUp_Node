@@ -1,6 +1,6 @@
 const express = require ('express')
 const router = express.Router()
-const {    getInvestments, DeleteInvestment,getInvestmentsByFormInvestement, getInvestmentsByInvestor ,SetInvestement , UpdateInbestement , findInvestementById , getInvestmentsByProject} = require('../controllers/investementController'); 
+const {    getInvestments, DeleteInvestment,getMontantTotalInvesti,getInvestmentsByFormInvestement, getInvestmentsByInvestor ,SetInvestement , UpdateInbestement , findInvestementById , getInvestmentsByProject} = require('../controllers/investementController'); 
 
 
 router.get('/' , getInvestments)
@@ -12,6 +12,7 @@ router.get('/getInvestmentsByProject/:id' ,getInvestmentsByProject )
 
 router.get('/getInvestmentsByInvestor/:id' ,getInvestmentsByInvestor )
 
+router.get('/getMontantTotalInvesti' , getMontantTotalInvesti)
 
 
 router.get('/getInvestmentsByFormInvestement/:formInvest' ,getInvestmentsByFormInvestement )

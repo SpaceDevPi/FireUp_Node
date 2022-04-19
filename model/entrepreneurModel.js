@@ -13,12 +13,12 @@ const entrepreneurSchema = mongoose.Schema({
     email: {
         type: String,
         required: true,
-        unique: true,
-        validate(value) {
-            if (!value.match(/^[^@ ]+@[^@ ]+\.[^@ .]{2,}$/)) {
-                throw new Error('Email is not valid.');
-            }
-        }
+        // unique: true,
+        // validate(value) {
+        //     if (!value.match(/^[^@ ]+@[^@ ]+\.[^@ .]{2,}$/)) {
+        //         throw new Error('Email is not valid.');
+        //     }
+        // }
     },
     firstname: {
         type: String,

@@ -11,8 +11,8 @@ router.get('/investorId/:id' ,findInvestorById )
 router.post('/newInvestor' , SetInvestor)
 
 
-router.put ('/ubdateInvestor/:id' , UpdateInvestor)
 
+router.put ('/ubdateInvestor/:id' , UpdateInvestor)
 
 router.delete('/deleteInvestor/:id' , DeleteInvestor)
 
