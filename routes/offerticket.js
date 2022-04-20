@@ -8,6 +8,7 @@ var sid ="AC7c74f112a40f61397839db1c3d2fc72b";
 var auth_token = "2520b5d46dce335023e95ce194eb4793"
  var twilio = require('twilio')(process.env.sid,process.env.auth_token)
 // var twilio = require('twilio')(sid,auth_token)
+// const connectDB = require('../config/db');
 
 router.get('/', function (req, res, next) {
   // twilio.messages.create({
@@ -23,14 +24,40 @@ router.get('/', function (req, res, next) {
           (err, Offers) => { res.send(Offers) }
         );
   });
-  
+  // router.get('/gethours/:date', function(req, res) {
+  //   //get data from the request
+  //     var data = {
+  //         date: req.params.date
+  //     };
+  //     function fetchID(data, callback) {
+  //       connectDB.query('SELECT timeoffer FROM offerticket WHERE date = ?',        
+  //                data.date, function(err, rows) {
+  //             if (err) {
+  //                 callback(err, null);
+  //             } else 
+  //                 callback(null, rows[0].id);
+  //         });
+  //     }
+  //     var user_id;
+  //     fetchID(data, function(err, content) {
+  //         if (err) {
+  //         console.log(err);
+  //         res.send(err);  
+  //         // Do something with your error...
+  //         } else {
+  //         user_id = content;
+  //         console.log(user_id);
+  //         res.send("user id is -" + user_id);
+  //         }
+  //     });
+  // })
   
   router.post('/add', async (req, res) => {
-    twilio.messages.create({
-      from :"+12344071581",
-      to:"+21626868706",
-      body:"Offer reservation done successfully! The meeting is scheduled with coach : "+req.body.coachfullname+ " for "+req.body.dateoffer+" , "+req.body.timeoffer+" in room number :"+req.body.numroom
-    }).then((res)=>console.log('worked')).catch((err)=>{console.log(err);});
+    // twilio.messages.create({
+    //   from :"+12344071581",
+    //   to:"+21626868706",
+    //   body:"Offer reservation done successfully! The meeting is scheduled with coach : "+req.body.coachfullname+ " for "+req.body.dateoffer+" , "+req.body.timeoffer+" in room number :"+req.body.numroom
+    // }).then((res)=>console.log('worked')).catch((err)=>{console.log(err);});
     try {
       await Offerticket.create({
         idcoach:req.body.idcoach,
@@ -80,8 +107,9 @@ console.log("3")
           console.log("true");
           Offerticket.updateOne({ _id: req.params.id }, { $set: req.body }, (err, data) => {
             console.log(data);
+            console.log(err)
             // res.redirect('/contact');
-            res.json(" : Contact :" + Offer._id + " updated"); 
+            res.json(" : Contact :" + Offerticket._id + " updated"); 
 
           });
           // res.json(result)
