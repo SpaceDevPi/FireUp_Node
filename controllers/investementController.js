@@ -247,9 +247,11 @@ const getInvestmentsByFormInvestement = asyncHandler(async (req , res) => {
 //get investement by project using
 const getInvestmentsByInvestor = asyncHandler(async (req , res) => {
   const investements = await Investement.find({idInvestisseur : req.params.id})
+console.log(investements)
 
+  
 
-    const projects = await Project.find(
+    var projects = await Project.findOne(
       {id : investements.forEach(element=>{
          element.idProject
          console.log(element.idProject)

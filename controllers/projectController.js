@@ -317,6 +317,14 @@ const updatedProject = await Project.findByIdAndUpdate(req.params.id, req.body, 
 
   res.status(200).json(updatedProject)
 })
+
+
+//Adem Matching 
+const GetProjectForEachInvestement = asyncHandler(async (req , res) => {
+  
+})
+
+
 module.exports = {
   getApprovedProjectsByCategorie, getProjectsToApprove,getProjectsToApproveBycontractorId,getApprovedProjectsByContractorId,getRefusedProjectsByContractorId,ApproveProject,getApprovedProjects,getRefusedProjects, SetProject ,UpdateProject ,DeleteProject, findProjectById,findProjectByContractorId
 }
