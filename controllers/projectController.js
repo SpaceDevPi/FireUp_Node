@@ -2,6 +2,7 @@ const asyncHandler = require('express-async-handler')
 const Project= require('../models/ProjectModel')
 const nodemailer = require("nodemailer");
 const SendmailTransport = require('nodemailer/lib/sendmail-transport');
+const schedule = require("node-schedule");
 
 
 
@@ -21,13 +22,51 @@ const getProjectsToApproveBycontractorId = asyncHandler(async (req , res) => {
   res.status(200).json(projectsss)
 })
 
+const puppeteer = require('puppeteer');
+const month = '09';
+const year = '2020';
+
+
+
+const scraping = asyncHandler(async (req , res) => {
+  console.log("erbii")
+
+  // const browser = await puppeteer.launch({headless: true});
+  // const page = await browser.newPage();
+  // await page.goto(`https://www.imdb.com/movies-coming-soon/${year}-${month}`);
+  // const movies = await page.evaluate(() => {
+  //   let movies = [];
+  //   let elements = document.querySelectorAll('div.list_item');
+  //   for (element of elements) {
+  //     movies.push({
+  //       img: element.querySelector('img.poster')?.src,
+  //       title: element.querySelector('td.overview-top a')?.text.trim(),
+  //       time: element.querySelector('p.cert-runtime-genre time')?.textContent,
+  //       description: element.querySelector('div.outline')?.textContent.trim()
+      
+
+  //     })
+  //     console.log("erbii")
+  //   }
+  //   return movies;
+  // });
+  // // console.log("scrapping");
+  // console.log(movies);
+  // await browser.close(); 
+  // res.status(200).json(movies)
+
+
+})
 
 // get Project 
 const getApprovedProjects = asyncHandler(async (req , res) => {
     const projects = await Project.find({approved:"valide"})
  
-    console.log(projects)
+    console.log("projects displayed")
     res.status(200).json(projects)
+
+    
+
 })
 
 const getApprovedProjectsByContractorId = asyncHandler(async (req , res) => {
@@ -317,6 +356,20 @@ const updatedProject = await Project.findByIdAndUpdate(req.params.id, req.body, 
 
   res.status(200).json(updatedProject)
 })
+
+const job = schedule.scheduleJob('0 1 * * *', function(fireDate){
+  console.log('This job was supposed to run at ' + fireDate + ', but actually ran at ' + new Date());
+});
+
+
+const CheckStateOfProjectCompaign = asyncHandler(async (req , res) => {
+  const projects = await Project.find({state:"in progress"})
+
+  console.log(projects)
+  
+  res.status(200).json(projects)
+})
+
 module.exports = {
-  getApprovedProjectsByCategorie, getProjectsToApprove,getProjectsToApproveBycontractorId,getApprovedProjectsByContractorId,getRefusedProjectsByContractorId,ApproveProject,getApprovedProjects,getRefusedProjects, SetProject ,UpdateProject ,DeleteProject, findProjectById,findProjectByContractorId
+  scraping, CheckStateOfProjectCompaign, getApprovedProjectsByCategorie, getProjectsToApprove,getProjectsToApproveBycontractorId,getApprovedProjectsByContractorId,getRefusedProjectsByContractorId,ApproveProject,getApprovedProjects,getRefusedProjects, SetProject ,UpdateProject ,DeleteProject, findProjectById,findProjectByContractorId
 }
