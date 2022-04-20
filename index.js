@@ -146,7 +146,6 @@ app.use('/api/articles', ArticleRouter);
 app.use('/api/offers', OfferRouter);
 app.use('/api/offerticket', Offerticket);
 // app.use('/api/meet', meet);
-
 app.use(errorHandler)
 
 http.listen(PORT, () => {console.log('Server is running on port ' + PORT)});
