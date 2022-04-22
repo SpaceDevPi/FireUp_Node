@@ -110,6 +110,28 @@ io.on('connection', (socket) => {
 
     })
 
+    socket.on('get-entrepreneur', async (id) => {
+        const entrepreneur = await Entrepreneur.findById(id);
+        socket.emit('get-entrepreneur', entrepreneur);
+    })
+
+    // app.delete('/api/logout', async (req, res) => {
+    //     try{
+    //         const {_id, newMessages} = req.body;
+    //         const entrepreneur = await Entrepreneur.findById(_id);
+    //         entrepreneur.status = "offline";
+    //         // entrepreneur.newMessages = newMessages;
+    //         console.log(entrepreneur);
+    //         await entrepreneur.save();
+    //         const members = await Entrepreneur.find();
+    //         socket.broadcast.emit('new-user', members);
+    //         res.status(200).send('logout');
+    //     }catch(err){
+    //         console.log(err);
+    //         res.status(400).send(err);
+    //     }
+    // })
+
 })
 
 
