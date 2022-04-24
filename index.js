@@ -8,14 +8,22 @@ const getPriceFeed = require('./utils/scraping');
 const Entrepreneur = require('./model/entrepreneurModel')
 const Message = require('./model/message')
 const dotenv = require('dotenv').config();
+const passport = require('passport');
+const session = require('express-session');
 const PORT = process.env.PORT || 5000;
+const cookieSession = require('cookie-session');
 
+// passport config
+require('./passport')(passport);
 
 connectDB();
 
 const app = express();
 
-
+app.use(cookieSession({
+    maxAge: 24 * 60 * 60 * 1000,
+    keys: [process.env.COOKIE_KEY]
+}))
 
 getPriceFeed();
 
@@ -46,7 +54,6 @@ async function getMessagesFormRoom(room) {
     let roomMessages = await Message.aggregate([
         {$match: {to: room}},
     ])
-    console.log(roomMessages);
     return roomMessages;
 }
 
@@ -56,7 +63,6 @@ async function getLastMessagesFormRoom(room) {
         {$match: {to: room}},
         {$group: {_id: '$date', messagesByDate: {$push: '$$ROOT'}}}
     ])
-    console.log(roomMessages);
     return roomMessages;
 }
 
@@ -134,6 +140,19 @@ io.on('connection', (socket) => {
 
 })
 
+//session
+app.use(
+    session({
+        secret: 'secret',
+        resave: false,
+        saveUninitialized: false,
+    })
+);
+
+//passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
+
 
 
 app.use(errorHandler)
@@ -152,6 +171,7 @@ app.use('/api/comments' , require('./routes/commentsRoutes'))
 app.use('/uploads', express.static("uploads"));
 app.use("/api/events", require("./routes/eventsRoutes"));
 app.use("/api/bookings", require("./routes/bookingRoutes"));
+app.use("/api/auth",require("./routes/auth"));
 
 app.get('/rooms', (req, res) => {
     res.json(rooms);

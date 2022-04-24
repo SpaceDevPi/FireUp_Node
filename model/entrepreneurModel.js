@@ -1,6 +1,17 @@
 const mongoose = require('mongoose');
 
 const entrepreneurSchema = mongoose.Schema({
+    googleId:{
+        type: String,
+        required: false,
+    },
+    displayName:{
+        type: String,
+        required: false,
+    },
+    image:{
+        type: String,
+    },
     username: {
         type: String,
         required: false,
