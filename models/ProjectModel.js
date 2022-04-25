@@ -54,9 +54,7 @@ const ProjectSchema = mongoose.Schema({
         
     },
     contractor_id: {
-        type: String,
-        default : "1"
-        
+        type: String,  
     },
     category: {
         type: String,

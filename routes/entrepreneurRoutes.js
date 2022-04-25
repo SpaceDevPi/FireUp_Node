@@ -11,8 +11,10 @@ const {
     updateEntrepreneurValidation,
     verifyEmail,
     getEntrepreneurById,
+    changeStatus
 } = require("../controllers/entrepreneurController");
 const { protect } = require("../middleware/authMiddleware");
+// const auth = require("./auth");
 
 router.post("/", registerEntrepreneur);
 router.post("/login", loginEntrepreneur);
@@ -24,4 +26,7 @@ router.put("/security/:id", updateEntrepreneurPassword);
 router.put("/validate/:id", updateEntrepreneurValidation);
 router.get("/verify/:id/:token", verifyEmail);
 router.get("/:id", getEntrepreneurById);
+router.put("/logout/:id", changeStatus);
+// router.use("/auth",auth);
+
 module.exports = router;

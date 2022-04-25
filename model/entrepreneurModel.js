@@ -1,6 +1,17 @@
 const mongoose = require('mongoose');
 
 const entrepreneurSchema = mongoose.Schema({
+    googleId:{
+        type: String,
+        required: false,
+    },
+    displayName:{
+        type: String,
+        required: false,
+    },
+    image:{
+        type: String,
+    },
     username: {
         type: String,
         required: false,
@@ -59,6 +70,14 @@ const entrepreneurSchema = mongoose.Schema({
     valid: {
         type: Boolean,
         default: false
+    },
+    newMessages : {
+        type: Object,
+        default: {}
+    },
+    status : {
+        type: String,
+        default: 'online'
     },
     company: {
         type: mongoose.Schema.Types.ObjectId,

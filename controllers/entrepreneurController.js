@@ -283,6 +283,8 @@ const loginEntrepreneur = asyncHandler(async (req, res) => {
 
   if (entrepreneur.valid == true && (await bcrypt.compare(password, entrepreneur.password))) {
       console.log('entrepreneur', entrepreneur)
+      // update status 
+      await Entrepreneur.updateOne({ _id: entrepreneur._id }, { status: 'online' })
     res.json({
       _id: entrepreneur.id,
       validation: entrepreneur.valid,
@@ -418,6 +420,15 @@ const updateEntrepreneurValidation = asyncHandler(async (req, res) => {
   res.status(200).json(entrepreneur)
 })
 
+//@desc update entrepreneur online status
+//@route PUT /api/entrepreneurs/validate/:id
+//@access Private
+const changeStatus = asyncHandler(async (req, res) => {
+  const entrepreneur = await Entrepreneur.findByIdAndUpdate(req.params.id, {
+    status: 'offline',
+  })
+  res.status(200).json(entrepreneur)
+})
 
 //@desc get entrepreneur by id
 //@route GET /api/entrepreneurs/:id
@@ -446,4 +457,5 @@ module.exports = {
   updateEntrepreneurValidation,
   verifyEmail,
   getEntrepreneurById,
+  changeStatus
 }

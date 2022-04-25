@@ -9,7 +9,7 @@ const schedule = require("node-schedule");
 const getProjectsToApprove = asyncHandler(async (req , res) => {
   const projectsss = await Project.find({approved:"en attente"})
 
-  console.log(projectsss)
+
   res.status(200).json(projectsss)
 })
 
@@ -18,7 +18,7 @@ const getProjectsToApprove = asyncHandler(async (req , res) => {
 const getProjectsToApproveBycontractorId = asyncHandler(async (req , res) => {
   const projectsss = await Project.find({approved:"en attente",contractor_id:req.params.id})
 
-  console.log(projectsss)
+  
   res.status(200).json(projectsss)
 })
 
@@ -29,7 +29,7 @@ const year = '2020';
 
 
 const scraping = asyncHandler(async (req , res) => {
-  console.log("erbii")
+  
 
   // const browser = await puppeteer.launch({headless: true});
   // const page = await browser.newPage();
@@ -46,7 +46,7 @@ const scraping = asyncHandler(async (req , res) => {
       
 
   //     })
-  //     console.log("erbii")
+  //     
   //   }
   //   return movies;
   // });
@@ -62,7 +62,7 @@ const scraping = asyncHandler(async (req , res) => {
 const getApprovedProjects = asyncHandler(async (req , res) => {
     const projects = await Project.find({approved:"valide"})
  
-    console.log("projects displayed")
+    
     res.status(200).json(projects)
 
     
@@ -72,14 +72,14 @@ const getApprovedProjects = asyncHandler(async (req , res) => {
 const getApprovedProjectsByContractorId = asyncHandler(async (req , res) => {
   const projects = await Project.find({approved:"valide",contractor_id:req.params.id})
 
-  console.log(projects)
+  
   res.status(200).json(projects)
 })
 
 const getRefusedProjects = asyncHandler(async (req , res) => {
   const projects = await Project.find({approved:"refuse"})
 
-  console.log(projects)
+  
   res.status(200).json(projects)
 })
 
@@ -358,7 +358,7 @@ const updatedProject = await Project.findByIdAndUpdate(req.params.id, req.body, 
 })
 
 const job = schedule.scheduleJob('0 1 * * *', function(fireDate){
-  console.log('This job was supposed to run at ' + fireDate + ', but actually ran at ' + new Date());
+  
 });
 
 
