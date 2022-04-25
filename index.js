@@ -10,7 +10,7 @@ const Message = require('./model/message')
 const dotenv = require('dotenv').config();
 const passport = require('passport');
 const session = require('express-session');
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 const cookieSession = require('cookie-session');
 
 // passport config
@@ -35,7 +35,7 @@ const io = require('socket.io')(server, {
     cors : {
         origin : 'http://localhost:3000',
         methods : ['GET', 'POST'],
-        
+        credentials : false
     }
 });
 
