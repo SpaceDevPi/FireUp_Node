@@ -17,6 +17,8 @@ var Offer = new
             coachfullname:String,
             starttime:String,
             endtime:String,
+            weekend: {type:Boolean,default:true},
+
         },
         {
             timestamps: true

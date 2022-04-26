@@ -25,6 +25,14 @@ require('./passport')(passport);
 connectDB();
 const app = express();
 
+const http = require('http').createServer(app);
+const io = require('socket.io')(http, {
+  cors : {
+      origin : 'http://localhost:3000',
+      methods : ['GET', 'POST'],
+      
+  }
+});
 let socketList = {};
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -47,14 +55,7 @@ getPriceFeed();
 const rooms = ['general', 'enrepreneurs', 'investors', 'coachs', 'companies'];
 
 const server = require('http').createServer(app);
-// const io = socket(server);
-const io = require('socket.io')(server, {
-    cors : {
-        origin : 'http://localhost:3000',
-        methods : ['GET', 'POST'],
-        credentials : false
-    }
-});
+
 
 
 // io.sockets.on('connection', (socket) => {
