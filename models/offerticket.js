@@ -4,12 +4,14 @@ var Offerticket = new
     Schema(
         {
             idcoach: String,
-            idoffer :{type: String, unique: true},
+            idoffer :String,
             idclient: String,
             numroom:Number,
             dateoffer:String,
             timeoffer:String,
             coachfullname:String,
+            clientfullname:String,
+
             checked: {type:String,default:"Unseen"},
             image:String,
             state:{type:String , default:'Ongoing'},
@@ -18,4 +20,5 @@ var Offerticket = new
             timestamps: true
         }
     );
-module.exports = mongoose.model('offerticket', Offerticket);
+module.exports = mongoose.model('offerticketss', Offerticket);
+

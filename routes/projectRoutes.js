@@ -45,7 +45,6 @@ const job =  schedule.scheduleJob(' 60 * * * * *', async function(fireDate){
 
 
     /***********/
-    console.log("aaaaaaaaazzzzz")
     const browser = await puppeteer.launch({headless: true});
 	const page = await browser.newPage();
 	await page.setDefaultNavigationTimeout(0);

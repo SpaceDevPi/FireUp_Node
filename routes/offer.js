@@ -34,6 +34,7 @@ router.get('/', function (req, res, next) {
         state:req.body.state,
         starttime:req.body.starttime,
         endtime:req.body.endtime,
+        weekend:req.body.weekend,
         coachfullname:req.body.coachfullname,
       })
       res.json({ status: 'ok' })
