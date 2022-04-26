@@ -11,7 +11,7 @@ var Offerticket = new
             timeoffer:String,
             coachfullname:String,
             clientfullname:String,
-
+            offertitle:String,
             checked: {type:String,default:"Unseen"},
             image:String,
             state:{type:String , default:'Ongoing'},

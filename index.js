@@ -10,6 +10,8 @@ var CoachRouter = require('./routes/coach');
 var ArticleRouter = require('./routes/article');
 var OfferRouter = require('./routes/offer');
 var Offerticket = require('./routes/offerticket');
+var Stars = require('./routes/stars');
+
 // var meet = require('./routes/meet');
 const path = require('path');
 
@@ -145,6 +147,8 @@ app.use('/api/coach', CoachRouter);
 app.use('/api/articles', ArticleRouter);
 app.use('/api/offers', OfferRouter);
 app.use('/api/offerticket', Offerticket);
+app.use('/api/stars', Stars);
+
 // app.use('/api/meet', meet);
 app.use(errorHandler)
 

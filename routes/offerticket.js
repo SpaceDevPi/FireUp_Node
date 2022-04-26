@@ -70,6 +70,7 @@ router.get('/',  async (req, res, next) => {
         dateoffer:req.body.dateoffer,
         timeoffer:req.body.timeoffer,
         image:req.body.image,
+        offertitle:req.body.offertitle,
         coachfullname:req.body.coachfullname,
         clientfullname:req.body.clientfullname,
       })
