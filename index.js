@@ -201,8 +201,8 @@ io.on('connection', (socket) => {
         socket.emit('room-messages', roomMessages);
     })
 
-    socket.on('message-room', async(room, content, sender, time, date ) => {
-        const newMessage = await Message.create({content, from: sender, time, date, to: room});
+    socket.on('message-room', async(room, content, sender, senderName, time, date ) => {
+        const newMessage = await Message.create({content, from: sender, senderName, time, date, to: room});
         let roomMessages = await getLastMessagesFormRoom(room);
         roomMessages = sortRoomMessagesByDate(roomMessages);
         // sendeing message to room 
