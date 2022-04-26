@@ -43,6 +43,7 @@ const SetBooking = asyncHandler(async (req, res) => {
       Date_Fin: booking.Date_Fin,
       Localisation: booking.Localisation,
       img: booking.img,
+      seat: booking.seat,
     });
   } else {
     res.status(400);
@@ -51,23 +52,23 @@ const SetBooking = asyncHandler(async (req, res) => {
 });
 
 //update booking
-// const UpdateBooking = asyncHandler(async (req, res) => {
-//   const booking = await Booking.findById(req.params.idTicket);
+const UpdateBooking = asyncHandler(async (req, res) => {
+  const booking = await Booking.findById(req.params.id);
 
-//   if (!booking) {
-//     res.status(400);
-//     throw new Error("booking not found");
-//   }
-//   const updatedBooking = await Booking.findByIdTicketAndUpdate(
-//     req.params.idTicket,
-//     req.body,
-//     {
-//       new: true,
-//     }
-//   );
+  if (!booking) {
+    res.status(400);
+    throw new Error("booking not found");
+  }
+  const updatedBooking = await Booking.findByIdAndUpdate(
+    req.params.id,
+    req.body,
+    {
+      new: true,
+    }
+  );
 
-//   res.status(200).json(updatedBooking);
-// });
+  res.status(200).json(updatedBooking);
+});
 
 //delete booking
 const DeleteBooking = asyncHandler(async (req, res) => {
@@ -83,14 +84,15 @@ const DeleteBooking = asyncHandler(async (req, res) => {
 });
 
 const findBookingById = asyncHandler(async (req, res) => {
-  const booking = await Booking.findById(req.params.id);
+  const idTicket = req.params.id;
+  const booking = await Booking.findOne({ idTicket });
   res.status(200).json(booking);
 });
 
 module.exports = {
   getBookings,
   SetBooking,
-  // UpdateBooking,
+  UpdateBooking,
   DeleteBooking,
   findBookingById,
 };
