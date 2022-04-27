@@ -357,7 +357,7 @@ const updatedProject = await Project.findByIdAndUpdate(req.params.id, req.body, 
   res.status(200).json(updatedProject)
 })
 
-const job = schedule.scheduleJob('0 1 * * *', function(fireDate){
+const job = schedule.scheduleJob('0 1 * * *', function(){
   
 });
 

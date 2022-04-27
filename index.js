@@ -235,13 +235,15 @@ app.use("/api/comments", require("./routes/commentsRoutes"));
 app.use("/uploads", express.static("uploads"));
 app.use("/api/events", require("./routes/eventsRoutes"));
 app.use("/api/bookings", require("./routes/bookingRoutes"));
-app.use("/api/coach", CoachRouter);
-app.use("/api/articles", ArticleRouter);
-app.use("/api/offers", OfferRouter);
-app.use("/api/offerticket", Offerticket);
+app.use('/api/coach', CoachRouter);
+app.use('/api/articles', ArticleRouter);
+app.use('/api/offers', OfferRouter);
+app.use('/api/offerticket', Offerticket);
+app.use('/api/projectlive', require('./routes/projectLiveRoutes'))
 app.use("/api/stars", Stars);
-
 // app.use('/api/meet', meet);
+
+
 app.use("/api/auth", require("./routes/auth"));
 
 app.get("/rooms", (req, res) => {
