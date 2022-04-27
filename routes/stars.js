@@ -87,11 +87,11 @@ router.get('/', function (req, res, next) {
       }
     );
   });
-  router.get('/findallbyid/:id', async (req, res) => {
+  router.get('/findstarsbyidoffer/:id', async (req, res) => {
    
-      const Stars = await Stars.find({ coachid: req.params.id })
+      const star = await Stars.find({ idoffer: req.params.id })
 
-      res.send(Stars);
+      res.send(star);
     });
     
   router.get('/find/:id', function (req, res, next) {
