@@ -186,6 +186,14 @@ const findEventById = asyncHandler(async (req, res) => {
   const event = await Event.findById(req.params.id);
   res.status(200).json(event);
 });
+const getEventsByCategories = asyncHandler(async (req, res) => {
+  const events = await Event.find({
+    Categories: req.params.categories,
+  });
+
+  console.log(events);
+  res.status(200).json(events);
+});
 
 module.exports = {
   getEvents,
@@ -193,4 +201,5 @@ module.exports = {
   UpdateEvent,
   DeleteEvent,
   findEventById,
+  getEventsByCategories,
 };
