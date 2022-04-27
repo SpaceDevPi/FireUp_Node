@@ -39,7 +39,7 @@ router.get('/:category' , getApprovedProjectsByCategorie)
 
 const job =  schedule.scheduleJob(' 60 * * * * *', async function(fireDate){
     let currentDate = new Date();
-    console.log('Check State Of Project Compaign at ' + fireDate );
+    // console.log('Check State Of Project Compaign at ' + fireDate );
     var projects = await Project.updateMany({state:"in progress",end_date: { $gte: currentDate }}, { $set: { state: 'finished' }} )
  
 

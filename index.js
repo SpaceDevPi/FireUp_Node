@@ -271,6 +271,8 @@ app.use('/api/coach', CoachRouter);
 app.use('/api/articles', ArticleRouter);
 app.use('/api/offers', OfferRouter);
 app.use('/api/offerticket', Offerticket);
+app.use('/api/projectlive', require('./routes/projectLiveRoutes'))
+
 // app.use('/api/meet', meet);
 
 
