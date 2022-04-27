@@ -7,6 +7,7 @@ const MessageSchema = new mongoose.Schema({
         ref: 'Entrepreneur',
         required: true
     },
+    senderName: String,
     socketId: String,
     time: String,
     date: String,

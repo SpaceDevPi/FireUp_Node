@@ -11,16 +11,34 @@ var ArticleRouter = require('./routes/article');
 var OfferRouter = require('./routes/offer');
 var Offerticket = require('./routes/offerticket');
 var Stars = require('./routes/stars');
+const getPriceFeed = require('./utils/scraping');
+const Entrepreneur = require('./model/entrepreneurModel')
+const Message = require('./model/message')
 
 // var meet = require('./routes/meet');
 const path = require('path');
+
+const passport = require('passport');
+const session = require('express-session');
+const cookieSession = require('cookie-session');
+
+// passport config
+require('./passport')(passport);
 
 connectDB();
 
 const app = express();
 
-const http = require('http').createServer(app);
-const io = require('socket.io')(http);
+
+const server = require('http').createServer(app);
+const io = require('socket.io')(server, {
+    cors : {
+        origin : 'http://localhost:3000',
+        methods : ['GET', 'POST'],
+        
+    }
+});
+
 let socketList = {};
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -31,6 +49,43 @@ app.get('/ping', (req, res) => {
       })
       .status(200);
   });
+
+  app.use(cookieSession({
+        maxAge: 24 * 60 * 60 * 1000,
+        keys: [process.env.COOKIE_KEY]
+  }))
+    
+  getPriceFeed();
+    
+  const rooms = ['general', 'enrepreneurs', 'investors', 'coachs', 'companies'];
+    
+  async function getMessagesFormRoom(room) {
+      let roomMessages = await Message.aggregate([
+            {$match: {to: room}},
+      ])
+        return roomMessages;
+    }
+
+
+    async function getLastMessagesFormRoom(room) {
+        let roomMessages = await Message.aggregate([
+            {$match: {to: room}},
+            {$group: {_id: '$date', messagesByDate: {$push: '$$ROOT'}}}
+        ])
+        return roomMessages;
+    }
+    
+    function sortRoomMessagesByDate(messages) {
+        return messages.sort(function(a, b) {
+            let date1 = a._id.split('/');
+            let date2 = b._id.split('/');
+    
+            date1 = date1[2] + date1[0] + date1[1];
+            date2 = date2[2] + date2[0] + date2[1];
+    
+            return date1 < date2 ? -1 : 1;
+        }); 
+    }
   
   // Socket
   io.on('connection', (socket) => {
@@ -115,18 +170,63 @@ app.get('/ping', (req, res) => {
         .to(roomId)
         .emit('FE-toggle-camera', { userId: socket.id, switchTarget });
     });
+
+    // chat entrepreneur
+    socket.on('get-messages', async (room) => {
+          const messages = await getMessagesFormRoom(room);
+          socket.emit('get-messages', messages);
+       });
+
+       socket.on('new-user', async () => {
+                const members = await Entrepreneur.find();
+                io.emit('new-user', members);
+            })
+        
+            socket.on('room-messages', async (room) => {
+                const messages = await getLastMessagesFormRoom(room);
+                const sortedMessages = sortRoomMessagesByDate(messages);
+                io.emit('room-messages', sortedMessages);
+            })
+        
+            socket.on('join-room', async(room) => {
+                socket.join(room);
+               let roomMessages = await getLastMessagesFormRoom(room);
+                roomMessages = sortRoomMessagesByDate(roomMessages);
+                socket.emit('room-messages', roomMessages);
+            })
+        
+            socket.on('message-room', async(room, content, sender, time, date ) => {
+               const newMessage = await Message.create({content, from: sender, time, date, to: room});
+                let roomMessages = await getLastMessagesFormRoom(room);
+                roomMessages = sortRoomMessagesByDate(roomMessages);
+               // sendeing message to room 
+               io.to(room).emit('room-messages', roomMessages);
+         
+               socket.broadcast.emit('notifications', room)
+         
+           })
+         
+           socket.on('get-entrepreneur', async (id) => {
+                const entrepreneur = await Entrepreneur.findById(id);
+                socket.emit('get-entrepreneur', entrepreneur);
+           })
+        
   });
 
 
+//session
+app.use(
+      session({
+          secret: 'secret',
+          resave: false,
+          saveUninitialized: false,
+      })
+  );
+  //passport middleware
+  app.use(passport.initialize());
+  app.use(passport.session());
 
-
-
-
-
-
-
-
-
+app.use(errorHandler)
 // app.set('socketio', io);
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -150,6 +250,15 @@ app.use('/api/offerticket', Offerticket);
 app.use('/api/stars', Stars);
 
 // app.use('/api/meet', meet);
-app.use(errorHandler)
+app.use("/api/auth",require("./routes/auth"));
 
-http.listen(PORT, () => {console.log('Server is running on port ' + PORT)});
+app.get('/rooms', (req, res) => {
+    res.json(rooms);
+})
+
+app.get('/messages', (req, res) => {
+    let mesages = Message.find();
+    res.json(mesages);
+})
+    
+server.listen(PORT, () => {console.log('Server is running on port ' + PORT)});

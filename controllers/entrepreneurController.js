@@ -287,6 +287,7 @@ const loginEntrepreneur = asyncHandler(async (req, res) => {
       await Entrepreneur.updateOne({ _id: entrepreneur._id }, { status: 'online' })
     res.json({
       _id: entrepreneur.id,
+      fullName: entrepreneur.firstname + ' ' + entrepreneur.lastname,
       validation: entrepreneur.valid,
       token: generateToken(entrepreneur._id),
     })
