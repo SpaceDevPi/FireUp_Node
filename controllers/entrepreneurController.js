@@ -187,12 +187,14 @@ const registerEntrepreneur = asyncHandler(async (req, res) => {
       let transporter = nodemailer.createTransport({
         service : 'gmail', 
         auth: {
-          type: 'Oauth2',
           user: process.env.USER, // generated ethereal user
-          clientId : process.env.CLIENT_ID, 
-          clientSecret : process.env.CLIENT_SECRET,
-          regreshToken : process.env.REFRESH_TOKEN, 
-          accessToken : process.env.accessToken
+          pass: process.env.PASS, 
+          // type: 'Oauth2',
+          // user: process.env.USER, // generated ethereal user
+          // clientId : process.env.CLIENT_ID, 
+          // clientSecret : process.env.CLIENT_SECRET,
+          // regreshToken : process.env.REFRESH_TOKEN, 
+          // accessToken : process.env.accessToken
         },
         tls:{
           rejectUnauthorized : false 

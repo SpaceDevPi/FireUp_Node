@@ -127,12 +127,13 @@ const SetInvestement = asyncHandler( async (req , res) => {
   let transporter = await nodemailer.createTransport({
     service : 'gmail', 
     auth: {
-      type: 'Oauth2',
+      // type: 'Oauth2',
       user: process.env.USER, // generated ethereal user
-      clientId : CLIENT_ID, 
-      clientSecret : CLIENT_SECRET,
-      regreshToken : REFRESH_TOKEN, 
-      accessToken : process.env.accessToken
+      pass: process.env.PASS, 
+      // clientId : CLIENT_ID, 
+      // clientSecret : CLIENT_SECRET,
+      // regreshToken : REFRESH_TOKEN, 
+      // accessToken : process.env.accessToken
     },
     tls:{
       rejectUnauthorized : false 
